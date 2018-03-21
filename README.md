@@ -9,6 +9,6 @@ Comes installed on OSX. To install a library, use *pip3 install library-name*.
 
 ## Upto
 
-Page 42
+Page 54
 
-If all went all, your model will make
+Testing and Validating
