@@ -9,6 +9,6 @@ Comes installed on OSX. To install a library, use *pip3 install library-name*.
 
 ## Upto
 
-Page 54
+Page 58
 
-Testing and Validating
+Chapter 2
