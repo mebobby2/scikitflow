@@ -27,6 +27,6 @@ A percentile indicates the value below which a given percentage of observations 
 
 ## Upto
 
-Page 75
+Page 78
 
-Another quick way to get
+Scikit-Learn provides a few functions to split
