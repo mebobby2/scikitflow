@@ -12,7 +12,11 @@ To run a function inside the REPL:
 ## pip3
 Comes installed on OSX. To install a library, use *pip3 install library-name*.
 
-# Maths Concepts
+# Statistic Concepts
+## Stratified Sampling
+Random sampling methods to choose your training and test set is fine for large datasets, especially relative to the number of attributes, but it can run the risk of introducing a significant sampling bias. For example, if the population is composed of 51.3% males and 48.7% females, when selecting the test set of 1000 people, you want to make sure your sample maintains this ratio as well. This is called Stratified Sampling.
+
+# Basic Maths Concepts
 
 ## Standard Deviation
 The Standard Deviation is a measure of how spread out numbers are
@@ -27,6 +31,6 @@ A percentile indicates the value below which a given percentage of observations 
 
 ## Upto
 
-Page 78
+Page 79
 
-Scikit-Learn provides a few functions to split
+Most mediam income values are clustered around

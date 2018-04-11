@@ -24,6 +24,9 @@ def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
 # housing.info()
 # housing.describe()
 
+# histograms offers a quick way to see how your data is distributed
+# so you can use stratified sampling to obtain your training and
+# test sets.
 # import matplotlib.pyplot as plt
 # housing.hist(bins=50, figsize=(20,15))
 # plt.show()
@@ -48,6 +51,10 @@ def test_set_check(identifier, test_ratio, hash):
 # housing_with_id = housing.reset_index() # adds an 'index' column
 # housing_with_id["id"] = housing["longitude"] * 1000 + housing["latitude"]
 # train_set, test_set = split_train_test_by_id(housing_with_id, 0.2, "id")
+
+# Or use the sklearn provided ones to split data
+# from sklearn.model_selection import train_test_split
+# train_set, test_set = train_test_split(housing, test_size=0.2, random_state=42)
 
 def split_train_test_by_id(data, test_ratio, id_column, hash=hashlib.md5):
     ids = data[id_column]
