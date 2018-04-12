@@ -21,6 +21,7 @@ def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
 
 # housing = load_housing_data()
 # housing["ocean_proximity"].value_counts()
+# housing.head() # look at the first 5 rows
 # housing.info()
 # housing.describe()
 
@@ -60,3 +61,19 @@ def split_train_test_by_id(data, test_ratio, id_column, hash=hashlib.md5):
     ids = data[id_column]
     in_test_set = ids.apply(lambda id_: test_set_check(id_, test_ratio, hash))
     return data.loc[~in_test_set], data.loc[in_test_set]
+
+# Stratified Sampling
+# housing["income_cat"] = np.ceil(housing["median_income"] / 1.5)
+# housing["income_cat"].where(housing["income_cat"] < 5, 5.0, inplace=True)
+
+# from sklearn.model_selection import StratifiedShuffleSplit
+# split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+# for train_index, test_index in split.split(housing, housing["income_cat"]):
+#     strat_train_set = housing.loc[train_index]
+#     strat_test_set = housing.loc[test_index]
+
+# housing["income_cat"].value_counts() / len(housing)
+
+# Remove the income_cat attribute
+# for set in (strat_train_set, strat_test_set):
+    # set.drop(["income_cat"], axis=1, inplace=True)
