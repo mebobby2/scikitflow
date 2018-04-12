@@ -4,6 +4,16 @@ from six.moves import urllib
 import pandas as pd
 import numpy as np
 import hashlib
+import matplotlib.pyplot as plt
+from sklearn.model_selection import StratifiedShuffleSplit
+
+IMAGES_PATH = os.path.join(".", "images")
+def save_fig(fig_id, tight_layout=True, fig_extension="png", resolution=300):
+    path = os.path.join(IMAGES_PATH, fig_id + "." + fig_extension)
+    print("Saving figure", fig_id)
+    if tight_layout:
+        plt.tight_layout()
+    plt.savefig(path, format=fig_extension, dpi=resolution)
 
 DOWNLOAD_ROOT = "https://raw.githubusercontent.com/ageron/handson-ml/master/"
 HOUSING_PATH = os.path.join("..", "datasets", "housing")
@@ -18,19 +28,6 @@ def fetch_housing_data(housing_url=HOUSING_URL, housing_path=HOUSING_PATH):
     housing_tgz = tarfile.open(tgz_path)
     housing_tgz.extractall(path=housing_path)
     housing_tgz.close()
-
-# housing = load_housing_data()
-# housing["ocean_proximity"].value_counts()
-# housing.head() # look at the first 5 rows
-# housing.info()
-# housing.describe()
-
-# histograms offers a quick way to see how your data is distributed
-# so you can use stratified sampling to obtain your training and
-# test sets.
-# import matplotlib.pyplot as plt
-# housing.hist(bins=50, figsize=(20,15))
-# plt.show()
 
 def load_housing_data(housing_path=HOUSING_PATH):
     csv_path = os.path.join(housing_path, "housing.csv")
@@ -62,18 +59,41 @@ def split_train_test_by_id(data, test_ratio, id_column, hash=hashlib.md5):
     in_test_set = ids.apply(lambda id_: test_set_check(id_, test_ratio, hash))
     return data.loc[~in_test_set], data.loc[in_test_set]
 
-# Stratified Sampling
-# housing["income_cat"] = np.ceil(housing["median_income"] / 1.5)
-# housing["income_cat"].where(housing["income_cat"] < 5, 5.0, inplace=True)
+def run():
+    print("### 1. Load the data")
+    housing = load_housing_data()
 
-# from sklearn.model_selection import StratifiedShuffleSplit
-# split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
-# for train_index, test_index in split.split(housing, housing["income_cat"]):
-#     strat_train_set = housing.loc[train_index]
-#     strat_test_set = housing.loc[test_index]
+    print("### 2. Take quick look at the data to understand the nature of it")
+    print(housing.info())
+    print(housing.describe())
+    print(housing.head()) # look at the first 5 rows
 
-# housing["income_cat"].value_counts() / len(housing)
+    # histograms offers a quick way to see how your data is distributed
+    # so you can use stratified sampling to obtain your training and
+    # test sets.
+    housing.hist(bins=50, figsize=(20,15))
+    save_fig("1-attribute_histogram_plots")
+    # plt.show()
 
-# Remove the income_cat attribute
-# for set in (strat_train_set, strat_test_set):
-    # set.drop(["income_cat"], axis=1, inplace=True)
+    print("### 3. Split data into training and test set using Stratified Sampling")
+    housing["income_cat"] = np.ceil(housing["median_income"] / 1.5)
+    housing["income_cat"].where(housing["income_cat"] < 5, 5.0, inplace=True)
+
+    split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+    for train_index, test_index in split.split(housing, housing["income_cat"]):
+        strat_train_set = housing.loc[train_index]
+        strat_test_set = housing.loc[test_index]
+
+    print(housing["income_cat"].value_counts() / len(housing))
+
+    # Cleanup: remove the income_cat attribute
+    for set in (strat_train_set, strat_test_set):
+        set.drop(["income_cat"], axis=1, inplace=True)
+
+    housing = strat_train_set.copy()
+
+    housing.plot(kind="scatter", x="longitude", y="latitude")
+    save_fig("2-bad_visualization_plot")
+
+    housing.plot(kind="scatter", x="longitude", y="latitude", alpha=0.1)
+    save_fig("3-better_visualization_plot")
