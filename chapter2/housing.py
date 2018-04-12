@@ -5,8 +5,6 @@ import pandas as pd
 import numpy as np
 import hashlib
 import matplotlib.pyplot as plt
-from sklearn.model_selection import StratifiedShuffleSplit
-from pandas.plotting import scatter_matrix
 
 IMAGES_PATH = os.path.join(".", "images")
 def save_fig(fig_id, tight_layout=True, fig_extension="png", resolution=300):

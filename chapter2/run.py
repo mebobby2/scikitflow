@@ -1,4 +1,9 @@
 from housing import *
+from sklearn.model_selection import StratifiedShuffleSplit
+from pandas.plotting import scatter_matrix
+from sklearn.preprocessing import Imputer
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import OneHotEncoder
 
 print("### 1. Load the data")
 housing = load_housing_data()
@@ -79,4 +84,34 @@ housing["population_per_household"] = housing["population"] / \
 
 corr_matrix = housing.corr()
 print(corr_matrix["median_house_value"].sort_values(ascending=False))
+
+print("### 6. Preparig data for ML algorithms")
+housing = strat_train_set.drop("median_house_value", axis=1)
+housing_labels = strat_train_set["median_house_value"].copy()
+
+print("Handling missing features")
+# housing.dropna(subset=["total_bedrooms"]) # get rid of rows with missing total_bedrooms
+# housing.drop("total_bedrooms", axis=1) # Get rid of the whole attribute
+# median = housing["total_bedrooms"].median()
+# housing["total_bedrooms"].fillna(median) # Set missing values to median
+imputer = Imputer(strategy="median")
+housing_num = housing.drop("ocean_proximity", axis=1)
+imputer.fit(housing_num)
+X = imputer.transform(housing_num)
+housing_tr = pd.DataFrame(X, columns=housing_num.columns)
+
+print("Converting Text and Categorical Attributes to numbers")
+encoder = LabelEncoder()
+housing_cat = housing["ocean_proximity"]
+housing_cat_encoded = encoder.fit_transform(housing_cat)
+encoder = OneHotEncoder()
+housing_cat_1hot = encoder.fit_transform(housing_cat_encoded.reshape(-1,1))
+print(housing_cat_1hot)
+
+
+
+
+
+
+
 # return housing

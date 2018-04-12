@@ -31,6 +31,6 @@ A percentile indicates the value below which a given percentage of observations 
 
 ## Upto
 
-Page 84
+Page 92
 
-This image tells you that
+Notice that the output is a SciPy
