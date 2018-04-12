@@ -64,7 +64,7 @@ def run():
     housing = load_housing_data()
 
     print("### 2. Take quick look at the data to understand the nature of it")
-    print(housing.info())
+    # print(housing.info())
     print(housing.describe())
     print(housing.head()) # look at the first 5 rows
 
@@ -90,6 +90,8 @@ def run():
     for set in (strat_train_set, strat_test_set):
         set.drop(["income_cat"], axis=1, inplace=True)
 
+    print("### 4. Visual data to discover and gain insights")
+
     housing = strat_train_set.copy()
 
     housing.plot(kind="scatter", x="longitude", y="latitude")
@@ -97,3 +99,10 @@ def run():
 
     housing.plot(kind="scatter", x="longitude", y="latitude", alpha=0.1)
     save_fig("3-better_visualization_plot")
+
+    housing.plot(kind="scatter", x="longitude", y="latitude", alpha=0.4,
+        s=housing["population"]/100, label="population",
+        c="median_house_value", cmap=plt.get_cmap("jet"),
+        colorbar=True)
+    plt.legend()
+    save_fig("4-housing_prices_scatterplot")

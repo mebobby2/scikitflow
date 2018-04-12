@@ -31,6 +31,6 @@ A percentile indicates the value below which a given percentage of observations 
 
 ## Upto
 
-Page 79
+Page 84
 
-Most mediam income values are clustered around
+This image tells you that
