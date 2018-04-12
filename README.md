@@ -29,6 +29,11 @@ The Standard Deviation is a measure of how spread out numbers are
 ## Percentiles
 A percentile indicates the value below which a given percentage of observations in a group of observations falls. These are often called the 25th percentile (or 1st quartile), the median, and the 75th percentile (or 3rd qaurtile). E.g. If an attribute's 25th percentile is 18, this means 25% of the attribute's values are lower than 18.
 
+## Nominal
+Nominal numbers or categorical numbers are numeric codes, meaning numerals used for labelling or identification only. The values of the numerals are irrelevant, and they do not indicate quantity, rank, or any other measurement.
+
+This is opposite of an ordinal number: a number denoting relative position in a sequence, such as first, second, third.
+
 ## Upto
 
 Page 92
