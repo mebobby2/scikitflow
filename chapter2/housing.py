@@ -6,6 +6,7 @@ import numpy as np
 import hashlib
 import matplotlib.pyplot as plt
 from sklearn.model_selection import StratifiedShuffleSplit
+from pandas.plotting import scatter_matrix
 
 IMAGES_PATH = os.path.join(".", "images")
 def save_fig(fig_id, tight_layout=True, fig_extension="png", resolution=300):
@@ -106,3 +107,33 @@ def run():
         colorbar=True)
     plt.legend()
     save_fig("4-housing_prices_scatterplot")
+
+    print("Fig 4 tells us that housing prices are related to location")
+    print(" (e.g., close to the ocean), and to the population density.")
+    print("We can also look for Correlations, using standard correlation coefficiient")
+
+    corr_matrix = housing.corr()
+    print(corr_matrix["median_house_value"].sort_values(ascending=False))
+
+    print("Correlations tells is that house value goes up when median income goes up")
+    print("Now lets plot the numerical attributes that seem correlated against one another")
+
+    attributes = ["median_house_value", "median_income", "total_rooms", "housing_median_age"]
+    scatter_matrix(housing[attributes], figsize=(12, 8))
+    save_fig("5-scatter_matrix_plot")
+
+    print("Zoom into fig5 for median-house-value and median-income scatter plot")
+    print("There is indeed a strong correlation as there is an upwards trend")
+    print("and the data points are not too dispersed.")
+    print("We have also identified some data quirks ie straight horizontal lines")
+    print("at 450k and 350k")
+
+    print("### 5. Experimenting with attribute combinations")
+
+    housing["rooms_per_household"] = housing["total_rooms"]/housing["households"]
+    housing["bedrooms_per_room"] = housing["total_bedrooms"]/housing["total_rooms"]
+    housing["population_per_household"] = housing["population"]/housing["households"]
+
+    corr_matrix = housing.corr()
+    print(corr_matrix["median_house_value"].sort_values(ascending=False))
+    # return housing
