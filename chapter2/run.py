@@ -1,9 +1,15 @@
 from housing import *
+from combined_attributes_adder import CombinedAttributesAdder
+from data_frame_selector import DataFrameSelector
 from sklearn.model_selection import StratifiedShuffleSplit
 from pandas.plotting import scatter_matrix
 from sklearn.preprocessing import Imputer
-from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import OneHotEncoder
+# from sklearn.preprocessing import LabelEncoder
+# from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import LabelBinarizer
+from sklearn.pipeline import Pipeline
+from sklearn.pipeline import FeatureUnion
+from sklearn.preprocessing import StandardScaler
 
 print("### 1. Load the data")
 housing = load_housing_data()
@@ -89,29 +95,66 @@ print("### 6. Preparig data for ML algorithms")
 housing = strat_train_set.drop("median_house_value", axis=1)
 housing_labels = strat_train_set["median_house_value"].copy()
 
-print("Handling missing features")
+print("6a. Handling missing features")
 # housing.dropna(subset=["total_bedrooms"]) # get rid of rows with missing total_bedrooms
 # housing.drop("total_bedrooms", axis=1) # Get rid of the whole attribute
 # median = housing["total_bedrooms"].median()
 # housing["total_bedrooms"].fillna(median) # Set missing values to median
-imputer = Imputer(strategy="median")
+
+# Instead of above - use the Imputer class
 housing_num = housing.drop("ocean_proximity", axis=1)
-imputer.fit(housing_num)
-X = imputer.transform(housing_num)
-housing_tr = pd.DataFrame(X, columns=housing_num.columns)
+# imputer = Imputer(strategy="median")
+# imputer.fit(housing_num)
+# X = imputer.transform(housing_num)
+# housing_tr = pd.DataFrame(X, columns=housing_num.columns)
 
-print("Converting Text and Categorical Attributes to numbers")
-encoder = LabelEncoder()
-housing_cat = housing["ocean_proximity"]
-housing_cat_encoded = encoder.fit_transform(housing_cat)
-encoder = OneHotEncoder()
-housing_cat_1hot = encoder.fit_transform(housing_cat_encoded.reshape(-1,1))
-print(housing_cat_1hot)
+print("6a. Converting Text and Categorical Attributes to numbers")
+# housing_cat = housing["ocean_proximity"]
+# encoder = LabelEncoder()
+# housing_cat_encoded = encoder.fit_transform(housing_cat)
+# encoder = OneHotEncoder()
+# housing_cat_1hot = encoder.fit_transform(housing_cat_encoded.reshape(-1,1))
 
+# Instead of above, the LabelBinarizer combines the LabelEncoder and the OneHotEncoder
+# encoder = LabelBinarizer(sparse_output=True)
+# housing_cat_1hot = encoder.fit_transform(housing_cat)
+# print(housing_cat_1hot)
 
+print("6a. Add custom transformers to get combined features")
+# add_bedrooms_per_room is a hyperparameter
+# attr_adder = CombinedAttributesAdder(add_bedrooms_per_room=True)
+# housing_extra_attribs = attr_adder.transform(housing.values)
+# print(housing_extra_attribs)
 
+print("6a. Feature scaling")
+# Machine learning algos do not perform well when the attributes
+# have different scales. E.g. total rooms range from 6 to 39320
+# where as median incomr is 0 to 15.
 
+# Instead of all the manual steps to Prepare the data, we will
+# use a data Pipeline
+num_attribs = list(housing_num)
+cat_attribs = ["ocean_proximity"]
 
+num_pipeline = Pipeline([
+    ('selector', DataFrameSelector(num_attribs)),
+    ('imputer', Imputer(strategy="median")),
+    ('attribs_adder', CombinedAttributesAdder()),
+    ('std_scaller', StandardScaler()),
+])
 
+cat_pipeline = Pipeline([
+    ('selector', DataFrameSelector(cat_attribs)),
+    ('label_binarizer', LabelBinarizer()),
+])
+
+full_pipeline = FeatureUnion(transformer_list=[
+    ("num_pipeline", num_pipeline),
+    ("cat_pipeline", cat_pipeline),
+])
+
+housing_prepared = full_pipeline.fit_transform(housing)
+print(housing_prepared)
+print(housing_prepared.shape)
 
 # return housing

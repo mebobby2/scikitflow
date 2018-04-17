@@ -9,8 +9,20 @@ To run a function inside the REPL:
 2. ```from housing import *```
 3. ```fetch_housing_data()```
 
+To run a script from CLI
+1. cd into script folder (so all the relative paths, if any, the script uses will work)
+2. ```python3 run.py```
+
 ## pip3
 Comes installed on OSX. To install a library, use *pip3 install library-name*.
+
+# Machine Learning Concepts
+## Feature scaling
+Machine learning algorithms do not perform well when the attributes have different scales. Hence, we need to get all the attibutes to have the same scale.
+
+There are two common ways to do this: *min-max* scaling and *standardization*.
+
+Min-max bounds values to the range of 0-1 whereas Standardization does not bound values to a specific range. Standardization is much less affected by outliers as compared to Min-max.
 
 # Statistic Concepts
 ## Stratified Sampling
@@ -36,6 +48,4 @@ This is opposite of an ordinal number: a number denoting relative position in a 
 
 ## Upto
 
-Page 92
-
-Notice that the output is a SciPy
+Page 98
