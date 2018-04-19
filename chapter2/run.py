@@ -10,6 +10,9 @@ from sklearn.preprocessing import LabelBinarizer
 from sklearn.pipeline import Pipeline
 from sklearn.pipeline import FeatureUnion
 from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+from sklearn.tree import DecisionTreeRegressor
 
 print("### 1. Load the data")
 housing = load_housing_data()
@@ -157,4 +160,42 @@ housing_prepared = full_pipeline.fit_transform(housing)
 print(housing_prepared)
 print(housing_prepared.shape)
 
-# return housing
+
+print("### 7. Select a model")
+print("Linear Regression")
+
+lin_reg = LinearRegression()
+lin_reg.fit(housing_prepared, housing_labels)
+housing_predictions = lin_reg.predict(housing_prepared)
+lin_mse = mean_squared_error(housing_labels, housing_predictions)
+lin_rmse = np.sqrt(lin_mse) # rmse = root mean square error
+
+# 68628.19819848922. This means a typical prediction error of $68,628.
+# This is not very good considering the most median_housing_values are
+# between $120,000 and $265,000. This is an exampe of underfitting the
+# training data.
+# This usually means the features do not provide enough info to make
+# good predictions, or the model is not powerful enough.
+# To fix:
+# 1. Select a more powerful model
+# 2. Feed algo better features (e.g. the log of the population)
+# 3. Reduce the constraints on the model
+# Linear regression is unregularized, so option 3 is out.
+print("lin_rmse = ", lin_rmse) # 68628.19819848922
+
+print("Pick a more powerful model: Decision Tree Regression")
+# Decision tree regression is capable of finding complex nonlinear
+# relationships in data
+tree_reg = DecisionTreeRegressor()
+tree_reg.fit(housing_prepared, housing_labels)
+
+housing_predictions = tree_reg.predict(housing_prepared)
+tree_mse = mean_squared_error(housing_labels, housing_predictions)
+tree_rmse = np.sqrt(tree_mse)
+
+# 0. No error rate? Sounds to good to be true. It's much more likely
+# that the model has badly overfitted the data.
+print("tree_rmse = ", tree_rmse) # 0
+
+print("Lets use better techniques to evaluate the decision tree regression model")
+print("Cross-Validation")

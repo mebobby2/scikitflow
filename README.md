@@ -28,6 +28,9 @@ Min-max bounds values to the range of 0-1 whereas Standardization does not bound
 ## Stratified Sampling
 Random sampling methods to choose your training and test set is fine for large datasets, especially relative to the number of attributes, but it can run the risk of introducing a significant sampling bias. For example, if the population is composed of 51.3% males and 48.7% females, when selecting the test set of 1000 people, you want to make sure your sample maintains this ratio as well. This is called Stratified Sampling.
 
+## Root Mean Squared error
+Is a common metric used to measure accuracy for continuous variables. That is, it can be used to measure the accuracy of a linear regression model. RMSE is a quadratic scoring rule that measures the average magnitude of the error. It’s the square root of the average of squared differences between prediction and actual observation.
+
 # Basic Maths Concepts
 
 ## Standard Deviation
@@ -48,4 +51,4 @@ This is opposite of an ordinal number: a number denoting relative position in a 
 
 ## Upto
 
-Page 98
+Page 101
