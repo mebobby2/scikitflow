@@ -13,6 +13,9 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.model_selection import cross_val_score
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import GridSearchCV
 
 print("### 1. Load the data")
 housing = load_housing_data()
@@ -199,3 +202,71 @@ print("tree_rmse = ", tree_rmse) # 0
 
 print("Lets use better techniques to evaluate the decision tree regression model")
 print("Cross-Validation")
+print("Decision Tree")
+
+scores = cross_val_score(tree_reg, housing_prepared, housing_labels, scoring="neg_mean_squared_error", cv=10)
+rmse_scores = np.sqrt(-scores)
+
+def display_scores(scores):
+    print("Scores:", scores)
+    print("Mean:", scores.mean())
+    print("Standard deviation:", scores.std())
+
+display_scores(rmse_scores)
+
+print("Linear Regression")
+lin_scores = cross_val_score(lin_reg, housing_prepared, housing_labels, scoring="neg_mean_squared_error", cv=10)
+lin_rmse_scores = np.sqrt(-lin_scores)
+display_scores(lin_rmse_scores)
+
+print("Seems like the Decision Tree is overfitting so badly that it performs worst than the Regression model")
+
+print("Let's try Random Forest Regression")
+
+forest_reg = RandomForestRegressor()
+forest_reg.fit(housing_prepared, housing_labels)
+forest_scores = cross_val_score(forest_reg, housing_prepared, housing_labels, scoring="neg_mean_squared_error", cv=10)
+forest_rmse_scores = np.sqrt(-forest_scores)
+display_scores(forest_rmse_scores)
+
+print("Wow - looks like Random Forest Regression yields the best results")
+
+print("### 8. Fine tune the model")
+
+param_grid = [
+    {'n_estimators': [3, 10, 30], 'max_features': [2, 4, 6, 8]},
+    {'bootstrap': [False], 'n_estimators': [3, 10], 'max_features': [2, 3, 4]},
+]
+
+grid_search = GridSearchCV(forest_reg, param_grid, cv=5, scoring="neg_mean_squared_error")
+
+grid_search.fit(housing_prepared, housing_labels)
+
+print("The best set of hyperparamters for Random Forest Regression is", grid_search.best_params_)
+print("And the evaluation scores:")
+cvres = grid_search.cv_results_
+for mean_score, params in zip(cvres["mean_test_score"], cvres["params"]):
+    print(np.sqrt(-mean_score), params)
+
+print("### 9. Analyze the Best Models and Their Errors")
+feature_importances = grid_search.best_estimator_.feature_importances_
+
+extra_attribs = ["rooms_per_hhold", "pop_per_hhold", "bedrooms_per_room"]
+label_binarizer = cat_pipeline.named_steps["label_binarizer"]
+cat_one_hot_attribs = list(label_binarizer.classes_)
+attributes = num_attribs + extra_attribs + cat_one_hot_attribs
+print(sorted(zip(feature_importances, attributes), reverse=True))
+
+print("### 10. Evaluate system on the Test Set")
+
+final_model = grid_search.best_estimator_
+
+X_test = strat_test_set.drop("median_house_value", axis=1)
+y_test = strat_test_set["median_house_value"].copy()
+
+X_test_prepared = full_pipeline.transform(X_test)
+
+final_predictions = final_model.predict(X_test_prepared)
+
+final_mse = mean_squared_error(y_test, final_predictions)
+print("FINAL RMSE:", np.sqrt(final_mse))
