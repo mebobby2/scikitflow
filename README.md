@@ -9,6 +9,8 @@ To run a function inside the REPL:
 2. ```from housing import *```
 3. ```fetch_housing_data()```
 
+4. If the file you're loading is just a python script without any functions, ```from housing import *``` will run it, and you can access variables set up by the script in side the REPL
+
 To run a script from CLI
 1. cd into script folder (so all the relative paths, if any, the script uses will work)
 2. ```python3 run.py```
@@ -51,4 +53,6 @@ This is opposite of an ordinal number: a number denoting relative position in a 
 
 ## Upto
 
-Page 114
+Page 120
+
+Performance Measures
