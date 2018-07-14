@@ -28,7 +28,7 @@ x_train, x_test, y_train, y_test = x[:60000], x[60000:], y[:60000], y[60000:]
 
 
 print("Shuffle the training set; to ensure cross-validation folds will be similar (you don't want one fold to be missing some digits)")
-print("Moreover, some algorithsm are sensitive to the order of the training instances, and perform poorly if the get many similar instances in a row")
+print("Moreover, some algorithms are sensitive to the order of the training instances, and perform poorly if the get many similar instances in a row")
 print("")
 import numpy as np
 shuffle_index = np.random.permutation(60000)

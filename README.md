@@ -26,12 +26,19 @@ There are two common ways to do this: *min-max* scaling and *standardization*.
 
 Min-max bounds values to the range of 0-1 whereas Standardization does not bound values to a specific range. Standardization is much less affected by outliers as compared to Min-max.
 
+## K-fold cross validation
+Splitting the training set into K-folds, then making predictions and evaluation them on each fold using a model trained on the remaining folds.
+Example: randomly split the training set into 10 distinct subsets called *folds*, then it trains and evaluates the model 10 times, picking a different fold for evaluation every time and training on the other 9 folds.
+
 # Statistic Concepts
 ## Stratified Sampling
 Random sampling methods to choose your training and test set is fine for large datasets, especially relative to the number of attributes, but it can run the risk of introducing a significant sampling bias. For example, if the population is composed of 51.3% males and 48.7% females, when selecting the test set of 1000 people, you want to make sure your sample maintains this ratio as well. This is called Stratified Sampling.
 
 ## Root Mean Squared error
 Is a common metric used to measure accuracy for continuous variables. That is, it can be used to measure the accuracy of a linear regression model. RMSE is a quadratic scoring rule that measures the average magnitude of the error. It’s the square root of the average of squared differences between prediction and actual observation.
+
+## Harmonic Mean
+The harmonic mean is a way to calculate the mean, or average, of a set of numbers. Using the harmonic mean is most appropriate when the set of numbers contains outliers that might skew the result. The regular mean treats all values equally, the harmonic mean gives much more weight to low values.
 
 # Basic Maths Concepts
 
@@ -53,6 +60,6 @@ This is opposite of an ordinal number: a number denoting relative position in a 
 
 ## Upto
 
-Page 120
+Page 126
 
-Performance Measures
+Precision/Recall Tradeoff
